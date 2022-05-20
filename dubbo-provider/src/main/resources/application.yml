@@ -1,0 +1,18 @@
+server:
+  port: 8181
+
+dubbo:
+  application:
+    name: dubbo-provider
+  scan:
+    basePackages: com.mzl.dubboprovider.provider
+  # \u6CE8\u518C\u670D\u52A1\u914D\u7F6E
+  registry:
+    id: provider-registry
+    address: zookeeper://localhost:2181?client=curator
+  protocol:
+    port: 20880
+
+# mybatis\u914D\u7F6E
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
