@@ -1,1 +1,28 @@
+server:
+  port: 8883
 
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 105293
+    url: jdbc:mysql://localhost:3306/dubbo-demo3?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+  main:
+    allow-circular-references: true
+
+dubbo:
+  application:
+    name: dubbo-consumer #注册在注册中心的名称，唯一标识
+  registry:
+    address: zookeeper://127.0.0.1:2181
+    protocol: zookeeper #默认名称，勿修改
+    check: false
+  protocol:
+    name: dubbo #默认名称，勿修改
+    port: "20887" #dubbo服务暴露的端口，一定要有双引号，不然报错
+  monitor:
+    protocol: register #默认名称，勿修改
+  consumer:
+    check: false
+    timeout: 3000
+  scan: com.mzl.dubboconsumer.controller #扫描的包名

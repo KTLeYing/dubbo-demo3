@@ -1,18 +1,53 @@
 server:
-  port: 8181
+  port: 8882
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 105293
+    url: jdbc:mysql://localhost:3306/dubbo-demo3?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+  # 自动打破依赖循环引用
+  main:
+    allow-circular-references: true
 
 dubbo:
   application:
     name: dubbo-provider
-  scan:
-    basePackages: com.mzl.dubboprovider.provider
-  # \u6CE8\u518C\u670D\u52A1\u914D\u7F6E
+  # 服务注册
   registry:
     id: provider-registry
-    address: zookeeper://localhost:2181?client=curator
+    protocol: zookeeper #默认名称，勿修改
+    check: false
+    address: zookeeper://localhost:2181
   protocol:
-    port: 20880
+    name: dubbo #默认名称，勿修改
+    port: "20886"  #dubbo服务暴露的端口，一定要有双引号，不然报错
+  monitor:
+    protocol: register #默认名称，勿修改
+  consumer:
+    check: false
+    timeout: 3000
+  scan: com.mzl.dubboprovider.service.impl #扫描的包名
 
-# mybatis\u914D\u7F6E
-mybatis:
-  mapper-locations: classpath:/mapper/*.xml
+# mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.mzl.dubbocommon.entity
+  type-enums-package: com.mzl.dubboprovider.enums
+  # MyBatis 原生支持的配置
+  configuration:
+    # 是否开启自动驼峰命名规则（camel case）映射
+    mapUnderscoreToCamelCase: true
+    # 在控制台打印SQL命令并打印执行结果
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 在控制台打印SQL命令不打印结果
+#    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  # 全局策略配置
+  global-config:
+    db-config:
+      logic-delete-field: deleted  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 0 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 1 # 逻辑未删除值(默认为 0)
+      #查询时不用判空
+      select-strategy: not_empty
